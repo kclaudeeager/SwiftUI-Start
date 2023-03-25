@@ -11,9 +11,10 @@ import SwiftUI
 struct MenusView: View {
     @ObservedObject var viewModel: MenuViewModel
     @State var selectedCategory: Category? = nil
+    @State private var scrollToTop: Bool = false
     let userData: User
     let companyData: Company
-    
+    @State private var searchText = ""
     var selectedCategoryBinding: Binding<Category?> {
         Binding<Category?>(
             get: {
@@ -27,27 +28,32 @@ struct MenusView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            SearchView()
+            SearchView(searchText: $searchText)
             CategoryPicker(categories: $viewModel.categories, selectedCategory: Binding<Category>(
                 get: { self.selectedCategory ?? self.viewModel.categories.first ?? Category(itemId: "", itemName: "", classItem: "", siteId: "", depId: "", regDate: "", status: "", deleteFlag: "") },
                 set: { self.selectedCategory = $0 }
             ))
-
-
-
-
             Text("Select menu")
                 .foregroundColor(.black)
                 .font(.headline)
                 .padding()
-            if viewModel.filteredMenuList.isEmpty {
-                Text("Loading...")
-                    .padding()
-            } else {
-                MenuGrid(menuList: viewModel.filteredMenuList)
-            }
+            
+            ScrollViewReader { scrollViewProxy in
+                          if viewModel.filteredMenuList.isEmpty {
+                              Text("Loading...")
+                                  .padding()
+                          } else {
+                              MenuGrid(menuList: viewModel.filteredMenuList)
+                                  .onChange(of: scrollToTop) { _ in
+                                      scrollViewProxy.scrollTo(0, anchor: .top)
+                                  }
+                          }
+                      }
             Spacer()
-            CartButton()
+            HStack{
+                CartButton()
+            }
+       
                 .padding()
         }
         .onAppear {
@@ -64,8 +70,17 @@ struct MenusView: View {
                     print(error.localizedDescription)
                 }
             }
-
         }
+        .onChange(of: selectedCategory) { category in
+            guard let category = category else { return }
+            viewModel.filterMenuListByCategory(category)
+            scrollToTop.toggle()
+        }
+        .onChange(of: searchText) { query in
+                    viewModel.filterMenuListByQuery(query: query)
+            scrollToTop.toggle()
+                }
+        
     }
 }
 

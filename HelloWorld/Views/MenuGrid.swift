@@ -25,7 +25,7 @@ struct MenuGrid: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 50)
-            }
+            }.id(UUID())
         }
     }
     

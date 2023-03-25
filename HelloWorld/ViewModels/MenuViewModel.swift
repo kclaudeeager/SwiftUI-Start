@@ -43,7 +43,7 @@ class MenuViewModel:ObservableObject {
 
    
 
-    private var selectedCategory = LiveData<Category>(Category(itemId: "", itemName: "",classItem: "",siteId:"",depId:"",regDate: "",status: "",deleteFlag: ""))
+    private var selectedCategory = LiveData<Category>(Category())
     var selectedCategoryObserver: ((Category) -> Void)? {
         didSet {
             selectedCategory.observe { category in
@@ -55,26 +55,28 @@ class MenuViewModel:ObservableObject {
 
     var serviceTables: [ServiceTable]? = nil
 
-    private func filterMenuListByCategory(_ category: Category) {
+     func filterMenuListByCategory(_ category: Category) {
         let filteredMenuList = menuList.value.filter { $0.item_id == category.itemId }
         let otherMenuList = menuList.value.filter { $0.item_id != category.itemId }
         self.filteredMenuList = filteredMenuList + otherMenuList
      
     }
 
-    func filterMenuListByQuery(query: String) -> LiveData<[MenuItem]> {
-        let liveData = LiveData<[MenuItem]>([])
+    func filterMenuListByQuery(query: String) {
+ 
         DispatchQueue.global(qos: .userInitiated).async {
             let filteredList = self.menuList.value
+           
             let matchedList = filteredList.filter {
                 $0.catg_name.localizedCaseInsensitiveContains(query) ||
                 $0.item_name.localizedCaseInsensitiveContains(query)
             }
             let resultList = matchedList + filteredList.filter { !matchedList.contains($0) }
-            liveData.value = resultList
+            self.setMenuList(menuList: resultList)
+            
         }
-        
-        return liveData
+     
+       
     }
     
     func getMenuItems() {
@@ -218,11 +220,11 @@ class MenuViewModel:ObservableObject {
             
             do {
                 let jsonDecoder = JSONDecoder()
-                let categoriesResponse = try jsonDecoder.decode(CategoriesResponse.self, from: data)
+                let categories = try jsonDecoder.decode([Category].self, from: data)
                 DispatchQueue.main.async {
-                    self.categories = categoriesResponse.categories
+                    self.categories = categories
                 }
-                completion(.success(categoriesResponse.categories))
+                completion(.success(categories))
             } catch {
                 print("Error decoding JSON: \(error.localizedDescription)")
                 completion(.failure(error))

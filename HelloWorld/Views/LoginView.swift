@@ -20,6 +20,7 @@ struct LoginFormView: View {
     @State private var buttonScale: CGFloat = 1.0
     @State private var isLoggingIn = false // Add state variable
     @State private var isLoggedin = false
+    @State private var showPassword = false
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.gray, .white]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -53,13 +54,26 @@ struct LoginFormView: View {
                             .foregroundColor(.red)
                             .padding(.horizontal, 30)
                     }
-                    SecureField("Enter your password", text: $password)
-                        .foregroundColor(.blue)
-                        .padding(10)
-                        .background(Color.white)
-                        .cornerRadius(20)
-                        .padding(.horizontal, 30)
-                        .focused($focusedField, equals: .passwordField)
+                    HStack {
+                            if showPassword {
+                                        TextField("Enter your password", text: $password)
+                                                    .foregroundColor(.blue)
+                                            } else {
+                                                SecureField("Enter your password", text: $password)
+                                                    .foregroundColor(.blue)
+                                            }
+                                            Button(action: {
+                                                showPassword.toggle()
+                                            }) {
+                                                Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
+                                                    .foregroundColor(.gray)
+                                            }
+                                        }
+                                        .padding(10)
+                                        .background(Color.white)
+                                        .cornerRadius(20)
+                                        .padding(.horizontal, 30)
+                                        .focused($focusedField, equals: .passwordField)
                 }
                 
                 // Update button text and add ProgressView
