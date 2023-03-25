@@ -43,7 +43,7 @@ struct MenuItemView: View {
                     Text("\(item.price) RWF")
                         .font(.system(size: 14))
                         .foregroundColor(Color.white)
-                        .frame(width: 70, height: 24)
+                        .frame(maxWidth:100,maxHeight: 24, alignment: .center)
                         .background(Color.blue)
                         .cornerRadius(4.0)
                    
@@ -57,7 +57,7 @@ struct MenuItemView: View {
                     .background(Color.white)
                     .clipShape(Circle())
                     .shadow(color: Color.black.opacity(0.2), radius: 4.0, x: 0, y: 2)
-                }
+                } .frame(maxWidth: .infinity, alignment: .center)
                 Text(item.unit_name=="" ? "\(item.catg_name)":"\(item.catg_name) _ \(item.unit_name)")
                     .font(.system(size: 12))
                     .foregroundColor(Color.black)

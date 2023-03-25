@@ -195,7 +195,7 @@ class MenuViewModel:ObservableObject {
 
     func getCategories(siteId: String, completion: @escaping (Result<[Category], Error>) -> Void) {
         guard let url = URL(string: "\(Urls.getCategories)?site_id=\(siteId)") else { return }
-        print(url)
+        
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -216,28 +216,17 @@ class MenuViewModel:ObservableObject {
                 return
             }
             
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print(jsonString)
-                if let jsonData = jsonString.data(using: .utf8) {
-                    
-                    
-                    do {
-                        
-                        let jsonDecoder = JSONDecoder()
-                        let categoryList = try jsonDecoder.decode(CategoriesResponse.self, from: jsonData)
-                        
-                        let categoriesResponse = try jsonDecoder.decode(CategoriesResponse.self, from: data)
-                        DispatchQueue.main.async {
-                            self.categories = categoriesResponse.categories
-                        }
-                        completion(.success(categoriesResponse.categories))
-                    } catch {
-                        print("Error decoding JSON: \(error.localizedDescription)")
-                        completion(.failure(error))
-                    }
+            do {
+                let jsonDecoder = JSONDecoder()
+                let categoriesResponse = try jsonDecoder.decode(CategoriesResponse.self, from: data)
+                DispatchQueue.main.async {
+                    self.categories = categoriesResponse.categories
                 }
+                completion(.success(categoriesResponse.categories))
+            } catch {
+                print("Error decoding JSON: \(error.localizedDescription)")
+                completion(.failure(error))
             }
-           
         }
         
         task.resume()
