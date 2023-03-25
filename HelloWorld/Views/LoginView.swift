@@ -119,7 +119,7 @@ struct LoginFormView: View {
     }
     
     func login() {
-        let endpointURL = URL(string: "https://uncle.itec.rw/RestaurantApi/management.php/login")!
+        let endpointURL = URL(string: "https://pin.itec.rw/RestaurantApi/management.php/login")!
         var request = URLRequest(url: endpointURL)
         request.httpMethod = "POST"
         let requestBody: [String: Any] = [
