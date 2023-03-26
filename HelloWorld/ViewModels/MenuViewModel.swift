@@ -12,11 +12,19 @@ class MenuViewModel:ObservableObject {
 //            getMenuItems()
 //        }
 
-    var cart = [CartItem]()
+    @Published var totalCartItems = 0
+    @Published var cart = [CartItem]() {
+        didSet {
+            totalCartItems = cart.count
+//            print(cart)
+        }
+    }
+
     private var totalConsumed = LiveData<Float>(0.0)
     @Published var categories = [Category]()
     @Published var filteredMenuList: [MenuItem] = []
-    var selectedMenuItems = LiveData<Set<MenuItem>>([])
+  
+    @Published var selectedMenuItems = LiveData<Set<MenuItem>>([])
     private var selectedTable: ServiceTable? = nil
     private var selectedAccompaniment: Accompaniment? = nil
     private var selectedSauce: Sauce? = nil
@@ -40,7 +48,7 @@ class MenuViewModel:ObservableObject {
             }
         }
     }
-
+   
    
 
     private var selectedCategory = LiveData<Category>(Category())
@@ -78,6 +86,26 @@ class MenuViewModel:ObservableObject {
      
        
     }
+    
+    func handleMenuItemViewClicked(menuItem: MenuItem) {
+      
+        if let index = self.cart.firstIndex(where: { $0.menuItem.assign_id == menuItem.assign_id }) {
+            // menu item is already in the cart, so remove it
+            self.cart.remove(at: index)
+        } else {
+            // menu item is not in the cart, so add it
+    
+            let price = menuItem.price
+            if let priceValue = Float(price) {
+                let cartItem = CartItem(menuItem: menuItem, quantity: 1, consumed_amount: priceValue, accompaniment: nil, sauce: nil, comment: nil)
+                self.cart.append(cartItem)
+              
+            }
+        }
+     
+    }
+
+
     
     func getMenuItems() {
         guard let url = URL(string: Urls.getMenuItems) else { return }

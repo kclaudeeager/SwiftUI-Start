@@ -10,6 +10,7 @@ import SwiftUI
 struct MenuGrid: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     let menuList: [MenuItem]
+    let handleMenuItemClicked: (MenuItem) -> Void
     
     var body: some View {
         GeometryReader { geometry in
@@ -18,17 +19,20 @@ struct MenuGrid: View {
             
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(menuList) { item in
-                        MenuItemView(item: item)
+                    ForEach(menuList, id: \.self) { item in
+                        MenuItemView(item: item, handleMenuItemViewClicked: handleMenuItemClicked)
                             .frame(width: cardWidth, height: cardWidth * 1.5)
                     }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 50)
-            }.id(UUID())
+                .onAppear {
+                    UITableView.appearance().separatorStyle = .none
+                }
+            }
         }
     }
-    
+
     func getColumnCount(geometry: GeometryProxy) -> [GridItem] {
         switch horizontalSizeClass {
         case .compact:
@@ -61,6 +65,8 @@ struct MenuGrid_Previews: PreviewProvider {
                 MenuItem(assign_id: "3", item: "3", catg_id: "3", unit_id: "3", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 3", item_id: "3", item_name: "Item 3", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 3", price: "30")
             ]
         
-        MenuGrid(menuList: menuItems)
+        MenuGrid(menuList: menuItems){ menuItem in
+            print("Selected item: \(menuItem.catg_name)")
+        }
     }
 }

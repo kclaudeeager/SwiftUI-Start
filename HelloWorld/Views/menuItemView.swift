@@ -1,10 +1,13 @@
 import SwiftUI
 
+import SwiftUI
+
 struct MenuItemView: View {
     @State private var isAddedToCart = false
     @State private var isZoomed = false
     @State private var scale: CGFloat = 1.0
     var item: MenuItem
+    var handleMenuItemViewClicked: (MenuItem) -> Void
     
     var body: some View {
         ZStack {
@@ -47,8 +50,9 @@ struct MenuItemView: View {
                         .background(Color.blue)
                         .cornerRadius(4.0)
                    
-                    Button(action: {
-                        isAddedToCart.toggle()
+                     Button(action: {
+                        toggleAddOrRemoveItem()
+                       
                     }, label: {
                         Image(systemName: isAddedToCart ? "checkmark.circle.fill" : "plus.circle.fill")
                             .foregroundColor(Color.blue)
@@ -58,12 +62,12 @@ struct MenuItemView: View {
                     .clipShape(Circle())
                     .shadow(color: Color.black.opacity(0.2), radius: 4.0, x: 0, y: 2)
                 } .frame(maxWidth: .infinity, alignment: .center)
-                Text(item.unit_name=="" ? "\(item.catg_name)":"\(item.catg_name) _ \(item.unit_name)")
+                Text(item.unit_name == "" ? "\(item.catg_name)" : "\(item.catg_name) _ \(item.unit_name)")
                     .font(.system(size: 12))
                     .foregroundColor(Color.black)
-                    .frame(maxWidth: .infinity, alignment: .center)
                     .lineLimit(2)
                     .padding(.top, 4)
+                    .multilineTextAlignment(.center)
             }
             .padding(8)
         }
@@ -79,19 +83,25 @@ struct MenuItemView: View {
                 }
         )
     }
+    
+    func toggleAddOrRemoveItem(){
+        isAddedToCart.toggle()
+        handleMenuItemViewClicked(item)
+    }
+
 }
 
 
 struct MenuItemView_Previews: PreviewProvider {
     static var previews: some View {
         let menuItem = MenuItem(assign_id: "6", item: "3", catg_id: "3", unit_id: "7", image: "/img/products/paradboxotot.png", site_id: "1", dep_id: "2", has_parent: "5", piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Pandoras Box Meloit(South Africa)", item_id: "3", item_name: "Red Wines", class_item: "1", reg_date: "2023-03-14 07:04:29", delete_flag: "0", unit_name: "ToT", price: "6000")
-        MenuItemView(item: menuItem)
+        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in })
             .padding()
             .previewLayout(.sizeThatFits)
             .environment(\.colorScheme, .light)
             .previewDisplayName("Light Mode")
         
-        MenuItemView(item: menuItem)
+        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in })
             .padding()
             .previewLayout(.sizeThatFits)
             .environment(\.colorScheme, .dark)

@@ -14,14 +14,17 @@ struct HomePageView: View {
     var body: some View {
         VStack {
             VStack {
-                Image(systemName: "applelogo")
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .padding(.top, 50)
+                Image(systemName: "building.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.black)
+                    .shadow(color: .black, radius: 10, x: 0, y: 0)
+                    .padding(.top,70)
                 Text("\(companyData.cmp_sn)")
                     .font(.headline)
                     .foregroundColor(.black)
             }
+
+
             Spacer()
             Text("Welcome \(userData.f_name) \(userData.l_name)!")
                 .font(.largeTitle)

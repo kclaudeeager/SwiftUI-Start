@@ -26,7 +26,7 @@ struct MenuItem: Decodable, Hashable, Identifiable {
     let reg_date: String
     let delete_flag: String
     let unit_name: String
-    let price: String // Change the type to Double
+    let price: String 
     var isChecked: Bool = false
     
     var id: String {

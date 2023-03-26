@@ -11,23 +11,16 @@ import SwiftUI
 struct MenusView: View {
     @ObservedObject var viewModel: MenuViewModel
     @State var selectedCategory: Category? = nil
-    @State private var scrollToTop: Bool = false
     let userData: User
     let companyData: Company
     @State private var searchText = ""
-    var selectedCategoryBinding: Binding<Category?> {
-        Binding<Category?>(
-            get: {
-                selectedCategory
-            },
-            set: {
-                selectedCategory = $0
-            }
-        )
-    }
     
     var body: some View {
-        VStack(spacing: 0) {
+        let handleMenuItemClicked: (MenuItem) -> Void = { menuItem in
+            viewModel.handleMenuItemViewClicked(menuItem: menuItem)
+        }
+        
+     VStack(spacing: 0) {
             SearchView(searchText: $searchText)
             CategoryPicker(categories: $viewModel.categories, selectedCategory: Binding<Category>(
                 get: { self.selectedCategory ?? self.viewModel.categories.first ?? Category(itemId: "", itemName: "", classItem: "", siteId: "", depId: "", regDate: "", status: "", deleteFlag: "") },
@@ -39,22 +32,30 @@ struct MenusView: View {
                 .padding()
             
             ScrollViewReader { scrollViewProxy in
-                          if viewModel.filteredMenuList.isEmpty {
-                              Text("Loading...")
-                                  .padding()
-                          } else {
-                              MenuGrid(menuList: viewModel.filteredMenuList)
-                                  .onChange(of: scrollToTop) { _ in
-                                      scrollViewProxy.scrollTo(0, anchor: .top)
-                                  }
-                          }
-                      }
-            Spacer()
-            HStack{
-                CartButton()
+                if viewModel.filteredMenuList.isEmpty {
+                    Text("Loading...")
+                        .padding()
+                } else {
+                    MenuGrid(menuList: viewModel.filteredMenuList, handleMenuItemClicked: handleMenuItemClicked)
+                        .onChange(of: selectedCategory, perform: { _ in
+                            scrollViewProxy.scrollTo(0, anchor: .top)
+                        })
+                        .onChange(of: searchText, perform: { _ in
+                            scrollViewProxy.scrollTo(0, anchor: .top)
+                        })
+                }
             }
-       
-                .padding()
+            
+            Spacer()
+            HStack {
+                if viewModel.totalCartItems > 0 {
+                    CartButton(totalCartItems: viewModel.totalCartItems,cart:viewModel.cart)
+                } else {
+                    EmptyView()
+                }
+            }
+            .padding()
+            
         }
         .onAppear {
             viewModel.getMenuItems()
@@ -74,16 +75,14 @@ struct MenusView: View {
         .onChange(of: selectedCategory) { category in
             guard let category = category else { return }
             viewModel.filterMenuListByCategory(category)
-            scrollToTop.toggle()
         }
         .onChange(of: searchText) { query in
-                    viewModel.filterMenuListByQuery(query: query)
-            scrollToTop.toggle()
-                }
-        
-    }
+            viewModel.filterMenuListByQuery(query: query)
+        }
+        }
+    
+    
 }
-
 
 struct MenusView_Previews: PreviewProvider {
     static var previews: some View {
