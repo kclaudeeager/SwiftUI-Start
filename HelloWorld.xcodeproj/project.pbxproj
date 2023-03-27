@@ -55,6 +55,7 @@
 		D0BE856729D07B8800144E9D /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BE856629D07B8800144E9D /* CartItemView.swift */; };
 		D0BE856829D07B8900144E9D /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BE856629D07B8800144E9D /* CartItemView.swift */; };
 		D0BE856929D07B8900144E9D /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BE856629D07B8800144E9D /* CartItemView.swift */; };
+		D0DBDFBA29D1743800C95C7E /* cartItemUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DBDFB929D1743800C95C7E /* cartItemUpdateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		D0BE855729D070BB00144E9D /* CrossedForksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossedForksView.swift; sourceTree = "<group>"; };
 		D0BE856229D079AA00144E9D /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		D0BE856629D07B8800144E9D /* CartItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemView.swift; sourceTree = "<group>"; };
+		D0DBDFB929D1743800C95C7E /* cartItemUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cartItemUpdateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +254,7 @@
 				D0BE855729D070BB00144E9D /* CrossedForksView.swift */,
 				D0BE856229D079AA00144E9D /* CheckoutView.swift */,
 				D0BE856629D07B8800144E9D /* CartItemView.swift */,
+				D0DBDFB929D1743800C95C7E /* cartItemUpdateView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 			files = (
 				D0A9F50A29CECE3C009CBA5D /* MenusView.swift in Sources */,
 				D0BE855829D070BB00144E9D /* CrossedForksView.swift in Sources */,
+				D0DBDFBA29D1743800C95C7E /* cartItemUpdateView.swift in Sources */,
 				D0A9F50D29CECE86009CBA5D /* DashboardView.swift in Sources */,
 				D0BE855629D0706000144E9D /* CrossedForksShape.swift in Sources */,
 				D0A9F53229CED93A009CBA5D /* LiveData.swift in Sources */,

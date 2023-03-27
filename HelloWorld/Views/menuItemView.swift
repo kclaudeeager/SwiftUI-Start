@@ -8,7 +8,7 @@ struct MenuItemView: View {
     @State private var scale: CGFloat = 1.0
     var item: MenuItem
     var handleMenuItemViewClicked: (MenuItem) -> Void
-    
+    @Binding var cart: [CartItem]
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16.0)
@@ -31,7 +31,7 @@ struct MenuItemView: View {
                 if let imageUrlString = item.image?.replacingOccurrences(of: " ", with: "%20"), let imageUrl = URL(string: "\(Urls.startUrl)\(imageUrlString)") {
                     URLImage(url: imageUrl)
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: 120)
+                        .frame(height: 80)
                         .clipShape(RoundedRectangle(cornerRadius: 16.0))
                         .padding(.top, 8)
                 } else {
@@ -65,7 +65,7 @@ struct MenuItemView: View {
                 Text(item.unit_name == "" ? "\(item.catg_name)" : "\(item.catg_name) _ \(item.unit_name)")
                     .font(.system(size: 12))
                     .foregroundColor(Color.black)
-                    .lineLimit(2)
+                    .lineLimit(3)
                     .padding(.top, 4)
                     .multilineTextAlignment(.center)
             }
@@ -81,7 +81,9 @@ struct MenuItemView: View {
                 .onEnded { value in
                     scale = 1.0
                 }
-        )
+        ).onAppear {
+            isAddedToCart = cart.contains(where: { $0.menuItem.assign_id == item.assign_id })
+        }
     }
     
     func toggleAddOrRemoveItem(){
@@ -93,15 +95,18 @@ struct MenuItemView: View {
 
 
 struct MenuItemView_Previews: PreviewProvider {
+    
+    @State static var menuItem = MenuItem(assign_id: "6", item: "3", catg_id: "3", unit_id: "7", image: "/img/products/paradboxotot.png", site_id: "1", dep_id: "2", has_parent: "5", piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Pandoras Box Meloit(South Africa)", item_id: "3", item_name: "Red Wines", class_item: "1", reg_date: "2023-03-14 07:04:29", delete_flag: "0", unit_name: "ToT", price: "6000")
+    
+    @State static var cartItems = [CartItem(menuItem: menuItem, quantity: 1,consumed_amount:20.0,accompaniment: nil,sauce: nil,comment: "Hy")]
     static var previews: some View {
-        let menuItem = MenuItem(assign_id: "6", item: "3", catg_id: "3", unit_id: "7", image: "/img/products/paradboxotot.png", site_id: "1", dep_id: "2", has_parent: "5", piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Pandoras Box Meloit(South Africa)", item_id: "3", item_name: "Red Wines", class_item: "1", reg_date: "2023-03-14 07:04:29", delete_flag: "0", unit_name: "ToT", price: "6000")
-        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in })
+        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in },cart: $cartItems)
             .padding()
             .previewLayout(.sizeThatFits)
             .environment(\.colorScheme, .light)
             .previewDisplayName("Light Mode")
         
-        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in })
+        MenuItemView(item: menuItem, handleMenuItemViewClicked: { _ in },cart: $cartItems)
             .padding()
             .previewLayout(.sizeThatFits)
             .environment(\.colorScheme, .dark)

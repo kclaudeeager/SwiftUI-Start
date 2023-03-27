@@ -7,7 +7,7 @@
 
 import Foundation
 struct DashboardStats:Decodable,Hashable {
-    let pending: Int
+       let pending: Int
        let inProgress: Int
        let delivered: Int
        let totalAmount: Int

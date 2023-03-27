@@ -86,7 +86,7 @@ class MenuViewModel:ObservableObject {
      
        
     }
-    
+ 
     func handleMenuItemViewClicked(menuItem: MenuItem) {
       
         if let index = self.cart.firstIndex(where: { $0.menuItem.assign_id == menuItem.assign_id }) {
@@ -149,43 +149,43 @@ class MenuViewModel:ObservableObject {
         
         task.resume()
     }
-    func fetchAccompanimentsAndSauces(siteId: String, callback: @escaping ([Accompaniment]?, [Sauce]?) -> Void) {
+    func fetchAccompanimentsAndSauces(siteId: String, callback: @escaping (AccompanimentSauceResponse?) -> Void) {
         guard let url = URL(string: "\(Urls.baseUrl)others?site_id=\(siteId)") else { return }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
-                callback(nil, nil)
+                callback(nil)
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse,
                   (200..<300).contains(httpResponse.statusCode) else {
                 print("Invalid response")
-                callback(nil, nil)
+                callback(nil)
                 return
             }
             
             guard let data = data else {
                 print("No data returned")
-                callback(nil, nil)
+                callback(nil)
                 return
             }
             
             do {
                 let jsonDecoder = JSONDecoder()
                 let response = try jsonDecoder.decode(AccompanimentSauceResponse.self, from: data)
-                callback(response.accompaniments, response.sauces)
+                callback(response)
             } catch {
                 print("Error decoding JSON: \(error.localizedDescription)")
-                callback(nil, nil)
+                callback(nil)
             }
         }
         
         task.resume()
     }
-    
-    func fetchTables(siteId: Int, callback: @escaping ([ServiceTable]) -> Void) {
+
+    func fetchTables(siteId: String, callback: @escaping ([ServiceTable]?) -> Void) {
         guard let url = URL(string: "\(Urls.tables)\(siteId)") else { return }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -212,8 +212,7 @@ class MenuViewModel:ObservableObject {
             do {
                 let jsonDecoder = JSONDecoder()
                 let response = try jsonDecoder.decode(TablesResponse.self, from: data)
-                let serviceTables = response.tables.map { ServiceTable(tbl_id: $0.tbl_id, tbl_no: $0.tbl_no) }
-                callback(serviceTables)
+                callback(response.tables)
             } catch {
                 print("Error decoding JSON: \(error.localizedDescription)")
                 callback([])

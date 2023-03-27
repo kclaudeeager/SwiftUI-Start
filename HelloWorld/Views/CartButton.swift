@@ -9,10 +9,12 @@ import Foundation
 import SwiftUI
 struct CartButton: View {
     var totalCartItems: Int
-    var cart: [CartItem] // added cart parameter
-    
+    @Binding var cartItems: [CartItem] // added cart parameter
+    let accompaniments:[Accompaniment]
+    let sauces:[Sauce]
+    let serviceTables: [ServiceTable]
     var body: some View {
-        NavigationLink(destination: CheckoutView(cartItems:cart)) { // pass cart to CheckoutView
+        NavigationLink(destination: CheckoutView(cartItems:$cartItems,accompaniments: accompaniments,sauces:sauces,serviceTables:serviceTables)) { // pass cart to CheckoutView
             HStack(spacing: 10) {
                 ZStack {
                     Image(systemName: "cart")

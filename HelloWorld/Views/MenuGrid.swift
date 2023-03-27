@@ -10,8 +10,9 @@ import SwiftUI
 struct MenuGrid: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     let menuList: [MenuItem]
+    @Binding var cart: [CartItem]
     let handleMenuItemClicked: (MenuItem) -> Void
-    
+  
     var body: some View {
         GeometryReader { geometry in
             let columns = getColumnCount(geometry: geometry)
@@ -20,7 +21,7 @@ struct MenuGrid: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(menuList, id: \.self) { item in
-                        MenuItemView(item: item, handleMenuItemViewClicked: handleMenuItemClicked)
+                        MenuItemView(item: item, handleMenuItemViewClicked: handleMenuItemClicked,cart:$cart)
                             .frame(width: cardWidth, height: cardWidth * 1.5)
                     }
                 }
@@ -58,14 +59,18 @@ struct MenuGrid: View {
 }
 
 struct MenuGrid_Previews: PreviewProvider {
+    @State static var  menuItems = [
+            MenuItem(assign_id: "1", item: "1", catg_id: "1", unit_id: "1", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 1", item_id: "1", item_name: "Item 1", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 1", price: "10"),
+            MenuItem(assign_id: "2", item: "2", catg_id: "2", unit_id: "2", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 2", item_id: "2", item_name: "Item 2", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 2", price: "20"),
+            MenuItem(assign_id: "3", item: "3", catg_id: "3", unit_id: "3", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 3", item_id: "3", item_name: "Item 3", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 3", price: "30")
+        ]
+   
+    
+    @State static var cartItems = [CartItem(menuItem: menuItems[0], quantity: 1,consumed_amount:20.0,accompaniment: nil,sauce: nil,comment: "Hy")]
+    
     static var previews: some View {
-        let menuItems = [
-                MenuItem(assign_id: "1", item: "1", catg_id: "1", unit_id: "1", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 1", item_id: "1", item_name: "Item 1", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 1", price: "10"),
-                MenuItem(assign_id: "2", item: "2", catg_id: "2", unit_id: "2", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 2", item_id: "2", item_name: "Item 2", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 2", price: "20"),
-                MenuItem(assign_id: "3", item: "3", catg_id: "3", unit_id: "3", image: "\(Urls.startUrl)img/products/paradboxotot.png", site_id: "1", dep_id: "1", has_parent: nil, piece_no: nil, orderable: nil, type: "1", status: "1", catg_name: "Category 3", item_id: "3", item_name: "Item 3", class_item: "1", reg_date: "", delete_flag: "0", unit_name: "Unit 3", price: "30")
-            ]
-        
-        MenuGrid(menuList: menuItems){ menuItem in
+       
+        MenuGrid(menuList: menuItems,cart:$cartItems){ menuItem in
             print("Selected item: \(menuItem.catg_name)")
         }
     }
