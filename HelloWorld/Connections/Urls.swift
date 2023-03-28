@@ -19,4 +19,5 @@ class Urls {
     static var updateOrder = "\(baseUrl)orders?id="
     static let login = "\(baseUrl)login"
     static let tables = "\(baseUrl)tables?site_id="
+    static let orderItemDetails="\(baseUrl)itemsPrice?assign_id="
 }

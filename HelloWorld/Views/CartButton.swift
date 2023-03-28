@@ -13,8 +13,11 @@ struct CartButton: View {
     let accompaniments:[Accompaniment]
     let sauces:[Sauce]
     let serviceTables: [ServiceTable]
+    let isUploading:Bool
+    let createOrder: (String) -> Void
+    let orderResponse:String
     var body: some View {
-        NavigationLink(destination: CheckoutView(cartItems:$cartItems,accompaniments: accompaniments,sauces:sauces,serviceTables:serviceTables)) { // pass cart to CheckoutView
+        NavigationLink(destination: CheckoutView(cartItems:$cartItems,accompaniments: accompaniments,sauces:sauces,serviceTables:serviceTables,orderResponse: orderResponse, isUploading:isUploading,createOrder:createOrder)) { // pass cart to CheckoutView
             HStack(spacing: 10) {
                 ZStack {
                     Image(systemName: "cart")

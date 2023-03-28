@@ -6,7 +6,10 @@
 //
 
 import Foundation
-struct Tabel:Decodable,Hashable{
-    let number: String
+struct TabelOrder:Decodable,Hashable,Identifiable{
+     let number: String
      let orders: [Order]
+    var id: String {
+        number
+    }
 }

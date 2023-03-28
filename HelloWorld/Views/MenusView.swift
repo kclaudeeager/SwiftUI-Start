@@ -28,7 +28,10 @@ struct MenusView: View {
         let handleMenuItemClicked: (MenuItem) -> Void = { menuItem in
             viewModel.handleMenuItemViewClicked(menuItem: menuItem)
         }
-        
+        let createOrder: (String) -> Void={
+            tabelNumber in
+            viewModel.createOrder(tableNumber:tabelNumber)
+        }
         VStack(spacing: 0) {
             SearchView(searchText: $searchText)
             CategoryPicker(categories: $viewModel.categories, selectedCategory: Binding<Category>(
@@ -58,7 +61,7 @@ struct MenusView: View {
             Spacer()
             HStack {
                 if viewModel.totalCartItems > 0 {
-                    CartButton(totalCartItems: viewModel.totalCartItems, cartItems:cartItemsBinding, accompaniments: accompaniments, sauces: sauces,serviceTables:serviceTables)
+                    CartButton(totalCartItems: viewModel.totalCartItems, cartItems:cartItemsBinding, accompaniments: accompaniments, sauces: sauces,serviceTables:serviceTables,isUploading: viewModel.isUploading,createOrder:createOrder,orderResponse:viewModel.orderResponse)
                 } else {
                     EmptyView()
                 }
@@ -94,6 +97,7 @@ struct MenusView: View {
                     return
                 }
                 self.serviceTables=response
+              
             }
      
             

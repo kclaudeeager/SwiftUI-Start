@@ -14,13 +14,58 @@ struct CartItemView: View {
     @Binding var cartItems:[CartItem]
     let accompaniments: [Accompaniment]
     let sauces: [Sauce]
-    @State private var accompanimentSelection = 0
-    @State private var sauceSelection = 0
+
     @State private var temperatureSelection = 0
-    @State private var comment=""
     @State private var showOptions = false
     @State private var cartItemCopy: CartItem?
-    @State private var cartToUpdate:CartItem?
+    @State private var accompanimentSelection = 0 {
+        didSet {
+            cartItemCopy?.accompaniment = accompaniments[accompanimentSelection]
+        }
+    }
+
+    @State private var sauceSelection = 0 {
+        didSet {
+            cartItemCopy?.sauce = sauces[sauceSelection]
+        }
+    }
+    private var temperatureSelectionString: String {
+        switch temperatureSelection {
+        case 0:
+            return "Medium"
+        case 1:
+            return "Cold"
+        case 2:
+            return "Hot"
+        default:
+            return ""
+        }
+    }
+
+    var combinedComment: String {
+        return "\(temperatureSelectionString) - \(comment)"
+    }
+
+    @State private var comment: String = "" {
+        didSet {
+            updateCartItemComment()
+        }
+    }
+
+    private func updateCartItemComment() {
+     
+
+        if var cartItemCopy=cartItemCopy{
+            cartItemCopy.comment = combinedComment
+            if let index = cartItems.firstIndex(where: { $0.menuItem.assign_id == cartItemCopy.menuItem.assign_id }) {
+                cartItems[index] = cartItemCopy
+            }
+          
+        }
+ 
+    }
+
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16.0)
@@ -46,7 +91,13 @@ struct CartItemView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-    
+        .onChange(of: cartItemCopy) { updatedCartItemCopy in
+                    guard let updatedCartItemCopy = updatedCartItemCopy else { return }
+                     updateCartItemComment()
+                    if let index = cartItems.firstIndex(where: { $0.menuItem.assign_id == updatedCartItemCopy.menuItem.assign_id }) {
+                        cartItems[index] = updatedCartItemCopy
+                    }
+                }
     }
     
     @ViewBuilder
@@ -127,7 +178,7 @@ struct CartItemView: View {
             })
 
             Button(action: {
-                if var cartItemCopy = cartItemCopy {
+                if let cartItemCopy = cartItemCopy {
                   
                         let alert = UIAlertController(title: "Remove Item", message: "Are you sure you want to remove this item from your cart?", preferredStyle: .alert)
 
@@ -166,25 +217,20 @@ struct CartItemView: View {
         .onAppear {
             self.cartItemCopy = self.cartItem
         }
-        .onChange(of: cartItemCopy) { updatedCartItemCopy in
-                    guard let updatedCartItemCopy = updatedCartItemCopy else { return }
-                    if let index = cartItems.firstIndex(where: { $0.menuItem.assign_id == updatedCartItemCopy.menuItem.assign_id }) {
-                        cartItems[index] = updatedCartItemCopy
-                    }
-                }
+       
 
 
     }
 
     
     @ViewBuilder
-        private func optionsView() -> some View {
-            Group {
-                Text("Additional Comments")
-                    .font(.system(size: 11, weight: .bold))
-                
-                // Temperature selection
-              
+    private func optionsView() -> some View {
+        Group {
+            Text("Additional Comments")
+                .font(.system(size: 11, weight: .bold))
+            
+            // Temperature selection
+           
                 if cartItem.menuItem.dep_id == "2" {
                     temperatureSelectionView()
                 }
@@ -194,24 +240,31 @@ struct CartItemView: View {
                     if(accompaniments.count>0){
                         accompanimentPickerView()
                     }
-                        
+                    
                     if(sauces.count>0){
                         saucePickerView()
                     }
-                
+                    
                     
                 }
-           
+                
                 TextField("Type your comment here", text: $comment)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .id("comment") // Add an ID to the Picker
+                    .onChange(of: comment) { _ in
+                        // Trigger a change in cartItemCopy
+                       updateCartItemComment()
+                    }
+            
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Color.white)
-            .cornerRadius(10)
-            .shadow(radius: 5)
-            .padding(10)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color.white)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .padding(10)
         }
+    
     
     @ViewBuilder
     private func temperatureSelectionView() -> some View {
@@ -244,6 +297,22 @@ struct CartItemView: View {
                 }
             }
             .pickerStyle(MenuPickerStyle())
+            .id("accompanimentPicker") // Add an ID to the Picker
+            .onChange(of: accompanimentSelection) { _ in
+                // Trigger a change in cartItemCopy
+            
+                if var cartItemCopy=cartItemCopy{
+                    cartItemCopy.accompaniment=accompaniments[accompanimentSelection]
+                    
+                    if let index = cartItems.firstIndex(where: { $0.menuItem.assign_id == cartItemCopy.menuItem.assign_id }) {
+                        cartItems[index] = cartItemCopy
+                    }
+                  
+
+                }
+
+            }
+           
         }
     }
 
@@ -259,6 +328,22 @@ struct CartItemView: View {
                 }
             }
             .pickerStyle(MenuPickerStyle())
+            .id("saucePicker") // Add an ID to the Picker
+            .onChange(of: sauceSelection) { _ in
+                // Trigger a change in cartItemCopy
+            
+                cartItemCopy?.sauce=sauces[sauceSelection]
+                if var cartItemCopy=cartItemCopy{
+                    cartItemCopy.sauce=sauces[sauceSelection]
+                   
+                    if let index = cartItems.firstIndex(where: { $0.menuItem.assign_id == cartItemCopy.menuItem.assign_id }) {
+                        cartItems[index] = cartItemCopy
+                    }
+                  
+
+                }
+                //print(cartItemCopy!)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)

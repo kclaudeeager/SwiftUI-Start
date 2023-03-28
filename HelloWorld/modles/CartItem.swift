@@ -11,9 +11,9 @@ struct CartItem:Decodable,Hashable {
        let menuItem: MenuItem
        var quantity: Int
        var consumed_amount: Float
-       let accompaniment: Accompaniment?
-       let sauce: Sauce?
-       let comment: String?
+       var accompaniment: Accompaniment?
+       var sauce: Sauce?
+       var comment: String?
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(menuItem.assign_id)

@@ -6,7 +6,20 @@
 //
 
 import Foundation
-struct ServiceTable:Decodable ,Hashable{
-    let tbl_id:Int
-    let tbl_no:String
+struct ServiceTable: Decodable,Equatable {
+    let id: String
+    let number: String
+    let siteId: String
+    let status: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "tbl_id"
+        case number = "tbl_no"
+        case siteId = "site_id"
+        case status = "status"
+    }
+    static func ==(lhs: ServiceTable, rhs: ServiceTable) -> Bool {
+            return lhs.id == rhs.id && lhs.number == rhs.number
+        }
 }
+

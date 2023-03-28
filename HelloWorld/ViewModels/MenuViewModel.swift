@@ -12,15 +12,20 @@ class MenuViewModel:ObservableObject {
 //            getMenuItems()
 //        }
 
+    @Published var isUploading = false
+    @Published var orderResponse=""
     @Published var totalCartItems = 0
+    @Published var user:User?
+    @Published private var totalConsumed = 0.0
     @Published var cart = [CartItem]() {
         didSet {
             totalCartItems = cart.count
 //            print(cart)
+            totalConsumed=calculateOrderTotal()
         }
     }
 
-    private var totalConsumed = LiveData<Float>(0.0)
+   
     @Published var categories = [Category]()
     @Published var filteredMenuList: [MenuItem] = []
   
@@ -306,6 +311,72 @@ class MenuViewModel:ObservableObject {
             self.filteredMenuList = menuList
         }
     }
+    func calculateOrderTotal() -> Double {
+        return Double(cart.reduce(0.0) { $0 + $1.consumed_amount })
+    }
+    
+    func createOrder(tableNumber: String) {
+        if let user=user{
+            let url = URL(string: Urls.generateInvoice)!
+                let orderItemsJsonArray = cart.map { cartItem -> [String: Any] in
+                    return [
+                        "assign_id": cartItem.menuItem.assign_id,
+                        "quantity": cartItem.quantity,
+                        "price": cartItem.menuItem.price,
+                        "dep_id": cartItem.menuItem.dep_id,
+                        "accomp": cartItem.accompaniment?.name ?? "",
+                        "sauce": cartItem.sauce?.name ?? "",
+                        "comment": cartItem.comment ?? ""
+                    ]
+                }
+                let orderJsonObject: [String: Any] = [
+                    "table_number": tableNumber,
+                    "server_id": user.acc_id,
+                    "site_id": user.site_id,
+                    "total_amount": totalConsumed
+                ]
+                let fullOrderJsonObject: [String: Any] = [
+                    "order": orderJsonObject,
+                    "order_items": orderItemsJsonArray
+                ]
+                let jsonData = try! JSONSerialization.data(withJSONObject: fullOrderJsonObject)
+                print("Json:: \(jsonData)")
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.httpBody = jsonData
 
+                isUploading = true // show progress UI
+
+                URLSession.shared.dataTask(with: request) { (data, response, error) in
+                    DispatchQueue.main.async {
+                        self.isUploading = false // hide progress UI
+                    }
+                    if let error = error {
+                        print("Error creating order: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            // Show error message
+                        }
+                        return
+                    }
+                    guard let data = data else {
+                        print("No data returned from server")
+                        return
+                    }
+                    guard let responseJSON = try? JSONSerialization.jsonObject(with: data, options: []),
+                          let response = responseJSON as? [String: Any],
+                          let message = response["message"] as? String else {
+                        print("Invalid response from server")
+                        return
+                    }
+                   
+                    DispatchQueue.main.async {
+                        self.orderResponse=message
+                        self.cart=[]
+                    }
+                }.resume()
+        }
+        
+        }
 
 }

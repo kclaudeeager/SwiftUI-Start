@@ -15,6 +15,7 @@ struct CheckoutView: View {
     let accompaniments: [Accompaniment]
     let sauces: [Sauce]
     let serviceTables: [ServiceTable]
+    let orderResponse:String
     @State private var searchText = ""
     @State private var isSearching = false
     @State private var tableSelection = 0
@@ -22,7 +23,9 @@ struct CheckoutView: View {
     @State private var isTableSelected = false
     @State private var selectedTable: ServiceTable?
     @State private var showTablePicker = true
-    
+    @State private var showError = false
+    let isUploading:Bool
+    let createOrder: (String) -> Void
     var body: some View {
         VStack(spacing: 20) {
             ScrollView {
@@ -35,19 +38,19 @@ struct CheckoutView: View {
             }
             
             if showTablePicker {
-                    tablePickerView()
-                } else if let selectedTable = selectedTable {
-                    VStack {
-                        Divider()
-                        Text("Selected Table: \(selectedTable.number)")
-                            .padding(.vertical, 8)
-                            .onTapGesture {
-                                showTablePicker = true
-                            }
-                        Divider()
-                        // Render the rest of the view here
-                    }
+                tablePickerView()
+            } else if let selectedTable = selectedTable {
+                VStack {
+                    Divider()
+                    Text("Selected Table: \(selectedTable.number)")
+                        .padding(.vertical, 8)
+                        .onTapGesture {
+                            showTablePicker = true
+                        }
+                    Divider()
+                    // Render the rest of the view here
                 }
+            }
             
             HStack {
                 Text(String(format: "Total: %.1f RWF", calculateOrderTotal()))
@@ -55,7 +58,13 @@ struct CheckoutView: View {
                     .padding(.leading, 16)
                 Spacer()
                 Button(action: {
-                    // submit order action
+                    if let selectedTable=selectedTable{
+                        createOrder(selectedTable.number)
+                    }
+                    else{
+                        showError = true
+                    }
+                  
                 }, label: {
                     Text("Submit Order")
                         .foregroundColor(.white)
@@ -69,7 +78,26 @@ struct CheckoutView: View {
             .padding(.bottom, 16)
         }
         .navigationTitle("Checkout")
+        .overlay(isUploading ? ProgressView("Creating order...") : nil)
+        if showError {
+                        Text("Please select a table first")
+                            .foregroundColor(.red)
+                    }
+        else{
+            EmptyView()
+             if orderResponse != "" {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    ToastMessageView(message: orderResponse)
+                        .transition(.move(edge: .bottom))
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                            }
+                        }
+                }
+            }
+        }
     }
+    
     
     func calculateOrderTotal() -> Double {
         return Double(cartItems.reduce(0.0) { $0 + $1.consumed_amount })
@@ -98,20 +126,22 @@ struct CheckoutView: View {
                 }
             } else if !filteredTables.isEmpty {
                 Divider()
+                
                 List {
                     ForEach(filteredTables.indices, id: \.self) { index in
                         Button(action: {
                             selectedTable = filteredTables[index]
                             isTableSelected = true
-                        }, label: {
+                        }
+                        ){
                             Text(filteredTables[index].number)
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 16).multilineTextAlignment(.center)
-                        })
-                        .buttonStyle(PlainButtonStyle())
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(index % 2 == 0 ? Color.blue : Color.gray)
-                        .foregroundColor(.white)
+                        }
+//                        .buttonStyle(PlainButtonStyle())
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .background(index % 2 == 0 ? Color.blue : Color.gray)
+//                        .foregroundColor(.white)
                        
                     }
                 }

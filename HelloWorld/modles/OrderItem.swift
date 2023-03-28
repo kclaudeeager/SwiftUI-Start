@@ -6,8 +6,8 @@
 //
 
 import Foundation
-struct OrderItem:Decodable,Hashable {
-      var id:Int=0
+struct OrderItem:Decodable,Hashable,Identifiable{
+       var id:Int=0
        var assign_id:Int=0
        let orderId: Int
        var quantity: Int

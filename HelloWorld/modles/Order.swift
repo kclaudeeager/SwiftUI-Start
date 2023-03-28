@@ -6,8 +6,8 @@
 //
 
 import Foundation
-struct Order:Decodable,Hashable {
-      let id: Int
+struct Order:Decodable,Hashable,Identifiable {
+       let id: Int
        let tableNumber: String
        let serverId: Int
        let status: String
