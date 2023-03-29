@@ -85,16 +85,16 @@ struct CheckoutView: View {
                     }
         else{
             EmptyView()
-             if orderResponse != "" {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    ToastMessageView(message: orderResponse)
-                        .transition(.move(edge: .bottom))
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                            }
-                        }
-                }
-            }
+//             if orderResponse != "" {
+//                withAnimation(.easeInOut(duration: 0.5)) {
+//                    ToastMessageView(message: orderResponse)
+//                        .transition(.move(edge: .bottom))
+//                        .onAppear {
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//                            }
+//                        }
+//                }
+//            }
         }
     }
     
@@ -138,10 +138,7 @@ struct CheckoutView: View {
                                 .padding(.vertical, 8)
                                 .padding(.horizontal, 16).multilineTextAlignment(.center)
                         }
-//                        .buttonStyle(PlainButtonStyle())
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .background(index % 2 == 0 ? Color.blue : Color.gray)
-//                        .foregroundColor(.white)
+
                        
                     }
                 }

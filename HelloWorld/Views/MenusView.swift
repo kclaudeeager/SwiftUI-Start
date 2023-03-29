@@ -45,7 +45,7 @@ struct MenusView: View {
             
             ScrollViewReader { scrollViewProxy in
                 if viewModel.filteredMenuList.isEmpty {
-                    Text("Loading...")
+                    ProgressView("Loading...")
                         .padding()
                 } else {
                     MenuGrid(menuList: viewModel.filteredMenuList,cart:cartItemsBinding, handleMenuItemClicked: handleMenuItemClicked)
@@ -69,7 +69,9 @@ struct MenusView: View {
             .padding()
         }
         .onAppear {
-            viewModel.getMenuItems()
+            viewModel.getMenuItems(){
+                
+            }
             viewModel.getCategories(siteId: userData.site_id) { result in
                 switch result {
                 case .success(let categories):

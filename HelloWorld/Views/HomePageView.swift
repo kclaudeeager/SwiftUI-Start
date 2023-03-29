@@ -34,7 +34,7 @@ struct HomePageView: View {
                 .padding(.top, 50)
             
             Spacer()
-            NavigationLink(destination: ActivitiesView(userData:userData,companyData:companyData,menuViewModel: MenuViewModel())) {
+            NavigationLink(destination: ActivitiesView(userData:userData,companyData:companyData,menuViewModel: MenuViewModel(),orderViewModel: OrderViewModel())) {
                 Text("Go to Activities")
                     .font(.headline)
                     .fontWeight(.semibold)

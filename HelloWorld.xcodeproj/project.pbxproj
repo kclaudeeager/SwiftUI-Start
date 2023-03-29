@@ -63,6 +63,7 @@
 		D0DDD6DA29D31A40000B74BE /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DDD6D929D31A40000B74BE /* NetworkError.swift */; };
 		D0DDD6DC29D3282C000B74BE /* AddItemToOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DDD6DB29D3282C000B74BE /* AddItemToOrderView.swift */; };
 		D0DDD6DE29D33AC3000B74BE /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DDD6DD29D33AC3000B74BE /* TableView.swift */; };
+		D0DDD6E029D35D7B000B74BE /* OrdersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DDD6DF29D35D7B000B74BE /* OrdersListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +139,7 @@
 		D0DDD6D929D31A40000B74BE /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D0DDD6DB29D3282C000B74BE /* AddItemToOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemToOrderView.swift; sourceTree = "<group>"; };
 		D0DDD6DD29D33AC3000B74BE /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
+		D0DDD6DF29D35D7B000B74BE /* OrdersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,12 +263,12 @@
 				D0A9F51029CECEFE009CBA5D /* menuItemView.swift */,
 				D0A9F51229CECF51009CBA5D /* HomePageView.swift */,
 				D0A9F51429CECFBD009CBA5D /* OtherPartView.swift */,
+				D0BE855329CF380800144E9D /* ToastMessageView.swift */,
 				D0A9F53929CEEA4A009CBA5D /* SearchView.swift */,
 				D0A9F53B29CEEA77009CBA5D /* CategoryList.swift */,
 				D0A9F53D29CEEA91009CBA5D /* CategoryItem.swift */,
 				D0A9F53F29CEEAAF009CBA5D /* MenuGrid.swift */,
 				D0A9F54129CEEB11009CBA5D /* CartButton.swift */,
-				D0BE855329CF380800144E9D /* ToastMessageView.swift */,
 				D0BE855729D070BB00144E9D /* CrossedForksView.swift */,
 				D0BE856229D079AA00144E9D /* CheckoutView.swift */,
 				D0BE856629D07B8800144E9D /* CartItemView.swift */,
@@ -274,6 +276,7 @@
 				D0DDD6D329D313FF000B74BE /* OrderView.swift */,
 				D0DDD6DB29D3282C000B74BE /* AddItemToOrderView.swift */,
 				D0DDD6DD29D33AC3000B74BE /* TableView.swift */,
+				D0DDD6DF29D35D7B000B74BE /* OrdersListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				D0DDD6D829D31A03000B74BE /* ItemPriceResponse.swift in Sources */,
 				D0A9F54429CEFCCA009CBA5D /* URLImage.swift in Sources */,
 				D0A9F51829CED24A009CBA5D /* MenuViewModel.swift in Sources */,
+				D0DDD6E029D35D7B000B74BE /* OrdersListView.swift in Sources */,
 				D0A9F51329CECF51009CBA5D /* HomePageView.swift in Sources */,
 				D0A9F52029CED480009CBA5D /* Sauce.swift in Sources */,
 				D0A9F51E29CED3BE009CBA5D /* MenuItem.swift in Sources */,

@@ -215,11 +215,11 @@ struct CartItemView: View {
             })
         }
         .onAppear {
-            self.cartItemCopy = self.cartItem
+          
+                self.cartItemCopy = self.cartItem
+                
         }
        
-
-
     }
 
     

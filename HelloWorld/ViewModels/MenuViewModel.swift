@@ -112,7 +112,7 @@ class MenuViewModel:ObservableObject {
 
 
     
-    func getMenuItems() {
+    func getMenuItems( completion: @escaping () -> Void) {
         guard let url = URL(string: Urls.getMenuItems) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -142,6 +142,7 @@ class MenuViewModel:ObservableObject {
                         let menuList = try jsonDecoder.decode([MenuItem].self, from: jsonData)
                         
                         self.setMenuList(menuList: menuList)
+                        completion()
                     } catch {
                         print("Error decoding JSON: \(error.localizedDescription)")
                     }
@@ -307,8 +308,9 @@ class MenuViewModel:ObservableObject {
 
     private func setMenuList(menuList: [MenuItem]) {
         DispatchQueue.main.async {
-            self.menuList.value = menuList
             self.filteredMenuList = menuList
+            self.menuList.value = menuList
+          
         }
     }
     func calculateOrderTotal() -> Double {
